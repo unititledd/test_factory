@@ -1,6 +1,7 @@
 # AGENTS.md — project guide for Droid
 
-Restaurant reservations backend: FastAPI + SQLAlchemy 2 + SQLite.
+Restaurant reservations backend: FastAPI + SQLAlchemy 2 + PostgreSQL
+(SQLite fallback for zero-setup runs).
 
 ## Commands
 
@@ -22,5 +23,7 @@ Restaurant reservations backend: FastAPI + SQLAlchemy 2 + SQLite.
   (see `app/services/availability.py`).
 - Double-booking safety = service pre-check + partial unique index
   `uq_active_reservation_slot`; don't drop either.
-- Database location comes from `DATABASE_URL` (default `./reservations.db`,
-  git-ignored).
+- Database: PostgreSQL in dev/prod via `DATABASE_URL` from a git-ignored
+  `.env`; falls back to `./reservations.db` (SQLite) when unset. Tests run
+  on in-memory SQLite.
+- Never commit `.env` or any credentials.

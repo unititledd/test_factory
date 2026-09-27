@@ -4,7 +4,7 @@ A backend service that manages restaurant dining reservations: search
 available tables for a party and time window, book a table, and let
 administrators configure table inventory and operating hours.
 
-Stack: **Python 3.12 · FastAPI · SQLAlchemy 2 · SQLite**
+Stack: **Python 3.12 · FastAPI · SQLAlchemy 2 · PostgreSQL 17** (SQLite fallback for zero-setup runs)
 
 ## Quickstart
 
@@ -16,6 +16,21 @@ python -m venv .venv                      # once
 ```
 
 Interactive OpenAPI docs: http://127.0.0.1:8000/docs
+
+## Databases
+
+The service runs on **PostgreSQL** in development and production, with a
+zero-setup SQLite fallback:
+
+- Set `DATABASE_URL` — via a git-ignored `.env` file next to
+  `pyproject.toml`, or a real environment variable — to a Postgres
+  connection string, e.g.
+  `postgresql+psycopg://postgres:postgres@127.0.0.1:5432/reservations_dev`
+- With no `DATABASE_URL`, the app falls back to a local SQLite file
+  (`./reservations.db`) so the quickstart works with nothing installed
+- Tests always run on in-memory SQLite (fast and hermetic)
+- The double-booking guard is a partial unique index declared for both
+  dialects, so behavior is identical on either engine
 
 ## How the domain works
 
@@ -71,9 +86,12 @@ curl.exe -X POST http://127.0.0.1:8000/api/reservations/1/cancel
 
 ## Design decisions
 
-- **SQLite via SQLAlchemy 2.** Zero-config, file-based; switch databases by
-  setting `DATABASE_URL` (e.g. Postgres). The double-booking guard uses a
-  partial unique index declared with both SQLite and Postgres variants.
+- **PostgreSQL first, SQLite fallback.** The connection comes from
+  `DATABASE_URL` — a git-ignored `.env` sets it locally, an environment
+  variable sets it in deployment. No `DATABASE_URL` means a local SQLite
+  file, keeping the quickstart zero-config. The double-booking guard uses
+  a partial unique index declared for both dialects, so behavior is
+  identical on either engine.
 - **Database-enforced atomicity.** A partial `UNIQUE (table_id, start_time)`
   index over active reservations means two concurrent bookings of the same
   slot cannot both commit — the loser gets a 409. The service does a
@@ -110,7 +128,7 @@ curl.exe -X POST http://127.0.0.1:8000/api/reservations/1/cancel
 .venv\Scripts\python.exe -m pytest
 ```
 
-~28 tests cover admin config, availability search, the booking lifecycle,
+35 tests cover admin config, availability search, the booking lifecycle,
 and the database-level race guard.
 
 ## Production hardening (out of scope for v1)
