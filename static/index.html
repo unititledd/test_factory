@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Table &amp; Vine — Reservations</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8D%B7%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="masthead">
+    <div class="brand">
+      <h1>Table &amp; Vine</h1>
+      <p class="tagline">Two-hour seatings · book a table in seconds</p>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="book">Book</button>
+      <button class="tab" data-tab="reservations">Reservations</button>
+      <button class="tab" data-tab="admin">Admin</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============ Book ============ -->
+    <section class="panel active" id="panel-book">
+      <div class="card flow">
+        <h2>Find a table</h2>
+        <div class="controls">
+          <label class="field">
+            <span>Date</span>
+            <input type="date" id="book-date" />
+          </label>
+          <div class="field">
+            <span>Guests</span>
+            <span class="stepper">
+              <button type="button" id="guests-minus" aria-label="Fewer guests">−</button>
+              <strong id="guests-value">2</strong>
+              <button type="button" id="guests-plus" aria-label="More guests">+</button>
+            </span>
+          </div>
+        </div>
+        <div id="slot-grid" class="slot-grid" aria-live="polite"></div>
+      </div>
+
+      <div class="card hidden" id="card-tables">
+        <h2 id="tables-title">Tables</h2>
+        <p class="hint" id="tables-hint"></p>
+        <div id="table-list" class="table-list"></div>
+        <button type="button" class="linkish" id="back-to-slots">← Back to times</button>
+      </div>
+
+      <div class="card hidden" id="card-form">
+        <h2>Your details</h2>
+        <p class="hint" id="form-summary"></p>
+        <form id="booking-form" class="form">
+          <label class="field"><span>Name</span>
+            <input type="text" id="cust-name" required maxlength="100" placeholder="Yilun Wang" />
+          </label>
+          <label class="field"><span>Phone</span>
+            <input type="tel" id="cust-phone" required maxlength="30" placeholder="138 0000 0000" />
+          </label>
+          <div class="actions">
+            <button type="submit" class="primary">Confirm booking</button>
+            <button type="button" class="linkish" id="back-to-tables">← Back to tables</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card hidden" id="card-done">
+        <div class="done-mark">✓</div>
+        <h2>Table booked</h2>
+        <p class="hint" id="done-summary"></p>
+        <div class="actions">
+          <button type="button" class="linkish" id="cancel-booking">Cancel this reservation</button>
+          <button type="button" class="primary" id="book-again">Book another</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Reservations ============ -->
+    <section class="panel" id="panel-reservations">
+      <div class="card flow">
+        <h2>Reservations</h2>
+        <label class="field"><span>Date</span>
+          <input type="date" id="list-date" />
+        </label>
+        <div id="reservation-list" class="res-list" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ============ Admin ============ -->
+    <section class="panel" id="panel-admin">
+      <div class="card flow">
+        <h2>Table inventory</h2>
+        <div id="admin-tables" class="admin-rows"></div>
+        <form id="add-table-form" class="inline-form">
+          <input type="text" id="new-table-name" placeholder="Table name (e.g. Patio-2)" required maxlength="50" />
+          <input type="number" id="new-table-capacity" min="1" max="50" value="4" required />
+          <button type="submit" class="primary small">Add table</button>
+        </form>
+      </div>
+
+      <div class="card flow">
+        <h2>Weekly operating hours</h2>
+        <p class="hint">Each day runs one service window. Uncheck a day to stay closed.</p>
+        <div id="hours-editor" class="admin-rows"></div>
+        <div class="actions">
+          <button type="button" class="primary" id="save-hours">Save schedule</button>
+          <span id="hours-status" class="hint"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>

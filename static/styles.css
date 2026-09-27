@@ -1,0 +1,304 @@
+/* Table & Vine — reservations UI */
+
+:root {
+  --bg: #f6f1e7;
+  --card: #fffdf9;
+  --ink: #2b2118;
+  --muted: #8a7968;
+  --line: #e7dcc9;
+  --accent: #b3541e;
+  --accent-ink: #8f3f14;
+  --good: #2e7d4f;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* ---------- header & tabs ---------- */
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem 1.25rem 1rem;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.brand h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.2rem;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.tagline { color: var(--muted); margin: 0.25rem 0 0; font-size: 0.95rem; }
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 2px solid var(--line);
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: 0.6rem 1.1rem;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab.active { color: var(--accent-ink); border-bottom-color: var(--accent); font-weight: 600; }
+
+/* ---------- layout ---------- */
+
+main {
+  max-width: 780px;
+  margin: 1.5rem auto 4rem;
+  padding: 0 1.25rem;
+}
+
+.panel { display: none; }
+.panel.active { display: grid; gap: 1.25rem; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.5rem;
+  box-shadow: 0 1px 3px rgb(43 33 24 / 6%);
+}
+
+.card.hidden, .hidden { display: none; }
+
+h2 { font-family: Georgia, serif; margin: 0 0 0.9rem; font-size: 1.3rem; }
+
+.hint { color: var(--muted); font-size: 0.9rem; margin: 0.2rem 0 0.8rem; }
+
+/* ---------- inputs ---------- */
+
+.controls { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-end; }
+
+.field { display: grid; gap: 0.35rem; font-size: 0.85rem; color: var(--muted); }
+
+input[type="date"], input[type="time"], input[type="text"], input[type="tel"], input[type="number"] {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  font: inherit;
+  color: var(--ink);
+  width: 11rem;
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.25rem 0.8rem;
+  background: #fff;
+}
+
+.stepper button {
+  border: none;
+  background: none;
+  font-size: 1.15rem;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 0.1rem 0.4rem;
+}
+
+.stepper strong { min-width: 1.4rem; text-align: center; color: var(--ink); font-size: 1.05rem; }
+
+/* ---------- slot grid ---------- */
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+}
+
+.slot {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 0.6rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 0.15s;
+}
+
+.slot:hover:not(:disabled) { border-color: var(--accent); }
+.slot:disabled { opacity: 0.45; cursor: default; }
+.slot.selected { border-color: var(--accent); background: #fdf1e7; }
+.slot .when { display: block; font-weight: 600; font-size: 0.95rem; }
+.slot .free { display: block; font-size: 0.78rem; color: var(--good); margin-top: 0.2rem; }
+.slot .free.none { color: var(--muted); }
+
+/* ---------- table cards ---------- */
+
+.table-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 0.7rem;
+  margin-bottom: 0.9rem;
+}
+
+.table-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.table-card .name { font-weight: 600; }
+.table-card .seats, .seats { color: var(--muted); font-size: 0.85rem; margin-top: 0.15rem; }
+
+/* ---------- buttons ---------- */
+
+button.primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.6rem 1.4rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.primary:hover { background: var(--accent-ink); }
+button.primary.small { padding: 0.45rem 1rem; font-size: 0.9rem; }
+
+.linkish {
+  background: none;
+  border: none;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0;
+}
+
+.actions { display: flex; align-items: center; gap: 1.1rem; margin-top: 1rem; flex-wrap: wrap; }
+
+/* ---------- booking form & confirmation ---------- */
+
+.form { display: grid; gap: 0.9rem; max-width: 24rem; }
+
+.done-mark {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  background: #e5f2ea;
+  color: var(--good);
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  margin-bottom: 0.6rem;
+}
+
+/* ---------- reservation rows ---------- */
+
+.res-list { display: grid; gap: 0.6rem; margin-top: 1rem; }
+
+.res-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 0.7rem 1rem;
+  flex-wrap: wrap;
+}
+
+.res-row .meta { font-size: 0.95rem; }
+.res-row .who { color: var(--muted); font-size: 0.85rem; margin-top: 0.15rem; }
+.res-row .right { display: flex; align-items: center; gap: 0.7rem; }
+
+.chip {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+
+.chip.booked { background: #e9f2ec; color: var(--good); }
+.chip.cancelled { background: #f4e7e7; color: #a05252; }
+
+/* ---------- admin ---------- */
+
+.admin-rows { display: grid; gap: 0.5rem; margin-bottom: 1rem; }
+
+.admin-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 0.55rem 1rem;
+}
+
+.admin-row .check { display: flex; gap: 0.5rem; align-items: center; font-size: 0.95rem; color: var(--ink); }
+.admin-row .times { display: flex; align-items: center; gap: 0.5rem; }
+.dash { color: var(--muted); }
+
+.inline-form { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.inline-form input { width: auto; flex: 1; min-width: 10rem; }
+.inline-form input[type="number"] { flex: none; width: 5.5rem; }
+
+/* ---------- toast ---------- */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.4rem;
+  transform: translateX(-50%) translateY(160%);
+  background: #3a2c1f;
+  color: #fff;
+  padding: 0.65rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  transition: transform 0.25s;
+  z-index: 10;
+  max-width: min(90vw, 34rem);
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.ok { background: var(--good); }
+
+@media (max-width: 520px) {
+  .masthead { flex-direction: column; align-items: flex-start; }
+  input[type="date"] { width: 100%; }
+}

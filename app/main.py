@@ -1,7 +1,10 @@
 """Application factory and wiring."""
 
+from pathlib import Path
+
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app import config
 from app.database import make_engine, make_sessionmaker
@@ -43,14 +46,14 @@ def create_app(engine=None) -> FastAPI:
     def health() -> dict:
         return {"status": "ok"}
 
-    @app.get("/", include_in_schema=False)
-    def root() -> RedirectResponse:
-        # Friendly landing: browsers hitting the API root land on the docs.
-        return RedirectResponse(url="/docs")
-
     app.include_router(availability.router)
     app.include_router(reservations.router)
     app.include_router(admin.router)
+
+    # Serve the single-page front-end. Mounted LAST, so /api/*, /docs, and
+    # /health keep winning on path matching; html=True serves index.html at "/".
+    static_dir = Path(__file__).resolve().parent.parent / "static"
+    app.mount("/", StaticFiles(directory=static_dir, html=True), name="frontend")
     return app
 
 
